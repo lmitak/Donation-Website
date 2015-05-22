@@ -1,0 +1,80 @@
+/* --------------------------------------------- \\
+// Ovdje ima zmajeva. Bolje da ne dirate ništa.  \\
+// --------------------------------------------- */
+
+/* Clearfix metoda za čišćenje floatanih elemenata */
+.row:before, 
+.row:after, 
+.column:before, 
+.column:after, 
+.cf:before,
+.cf:after {
+    content: " ";
+    display: table;
+}
+
+.row:after, 
+.column:after, 
+.cf:after {
+    clear: both;
+}
+
+/**
+ * IE6/7 fix
+ */
+.row, 
+.column, 
+.cf {
+    *zoom: 1;
+}
+
+/* Širina kolumne */
+.column-1 { width: 60px; }
+.column-2 { width: 140px; }
+.column-3 { width: 220px; }
+.column-4 { width: 300px; }
+.column-5 { width: 380px; }
+.column-6 { width: 460px; }
+.column-7 { width: 540px; }
+.column-8 { width: 620px; }
+.column-9 { width: 700px; }
+.column-10 { width: 780px; }
+.column-11 { width: 860px; }
+.column-12 { width: 940px; }
+
+
+/*Širina kolumne u postocima*/
+/*decimalni zarez je točka*/
+.column-1{width:6.25%}
+.column-2{width: 14.58333333333333% }
+.column-4 {width: 31.25%;}
+.column-5 {width: 39.58333333333333% }
+.column-6 {width: 47.91666666666667% }
+.column-7 {width: 56.25% }
+.column-8 {width: 64.58333333333333% }
+.column-9 {width: 72.91666666666667% }
+.column-10 {width: 81.25%}
+.column-11 {width: 89.58333333333333%}
+.column-12 {width: 97.91666666666667%}
+
+/* Temeljna klasa kolumne */
+/*
+.column {
+	margin: 0 10px;
+  float: left;
+}*/
+.column {
+	margin: 0 1.041666666666667%;
+  float: left;
+}
+/* Redak */
+/*.row {
+	width: 960px;
+	margin: 0 auto;
+}*/
+.row {
+	max-width: 960px;
+	margin: 0 auto;
+	width:100%;
+}
+
