@@ -36,6 +36,22 @@
 </html>-->
 <?php include_once("site parts/header.php"); ?>
 
-
+<div class="row">
+    <div class="column column-12">
+        <form>
+            <label>Filtriraj sadržaj: </label>
+            <label for="tip" style="padding-left:1.8%">Tip trgovine:</label>
+            <select name="tip" id="tip">
+                <option value="pekara">Pekara</option>
+                <option value="opca">Opća</option>
+                <option value="mesinca">Mesnica</option>
+                <option value="vocarna">Voćarna</option>
+            </select>
+            <input type="checkbox" name="free" id="free"/>
+            <label for="free">Prikaži samo besplatno</label>
+        </form>
+        <div id="map"></div>
+    </div>
+</div>
 
 <?php include_once("site parts/footer.php"); ?>
