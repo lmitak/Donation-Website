@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 29, 2015 at 12:49 PM
+-- Generation Time: May 29, 2015 at 10:30 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -32,7 +32,14 @@ CREATE TABLE IF NOT EXISTS `korisnik` (
   `password` varchar(160) NOT NULL,
   `email` varchar(255) NOT NULL,
   PRIMARY KEY (`idKorisnika`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `korisnik`
+--
+
+INSERT INTO `korisnik` (`idKorisnika`, `username`, `password`, `email`) VALUES
+(1, 'stipe', '123', 'stipe_predanic@tvz.com');
 
 -- --------------------------------------------------------
 
@@ -45,7 +52,17 @@ CREATE TABLE IF NOT EXISTS `tiptvrtke` (
   `naziv` varchar(255) NOT NULL,
   `ikona` varchar(255) NOT NULL,
   PRIMARY KEY (`idTipa`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `tiptvrtke`
+--
+
+INSERT INTO `tiptvrtke` (`idTipa`, `naziv`, `ikona`) VALUES
+(1, 'Pekara', 'kru.png'),
+(2, 'Mesnica', 'meat.png'),
+(3, 'Voćarna', 'kruska.png'),
+(4, 'Trgovina', 'kolica.png');
 
 -- --------------------------------------------------------
 
@@ -68,7 +85,15 @@ CREATE TABLE IF NOT EXISTS `tvrtka` (
   PRIMARY KEY (`idTvrtke`),
   KEY `idKorisnika` (`idKorisnika`,`tip`),
   KEY `tip` (`tip`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `tvrtka`
+--
+
+INSERT INTO `tvrtka` (`idTvrtke`, `idKorisnika`, `naziv`, `tip`, `adresa`, `rating`, `kolPopusta`, `vrijemePopusta`, `dostupno`, `latitude`, `longitude`) VALUES
+(1, 1, 'Pekara Dolac', 1, 'Dolac 8', NULL, 50, '21:42:52', 1, 45.814223, 15.977251),
+(2, 1, 'Kim''s coffee', 3, 'Petrova 21', 3, 20, '21:42:52', 0, 45.81684, 15.99549);
 
 --
 -- Constraints for dumped tables
