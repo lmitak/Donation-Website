@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <title></title>
+    <link type="text/css" rel="stylesheet" href="css/stil.css"/>
+    <link rel="stylesheet" type="text/css" href="css/grid.css"/>
+</head>
+<body>
+<header>
+    <div class="row">
+        <h1>Logo</h1>
+        <ul>
+            <li><a href="#">Prijavi se</a></li>
+            <li>
+                Nisi još korisnik, a želiš prijaviti svoju tvrtku?<br>
+                <a href="#">Registriraj se</a>
+            </li>
+        </ul>
+    </div>
+</header>
+
+<div id="content">
+    {% block content %}
+
+
+    {% endblock %}
+
+</div>
+
+<footer>
+    <div class="row">
+        <h1>O nama</h1>
+        <p>
+            Mi smo neprofitabilna organizacija (web stranica) koja služi za informiranje o popustima i donacijama tvrtki.
+            Nismo treća stranka u razmjeni dobara, te tako se odrićemo svake odgovornosti.
+        </p>
+        <p>
+            Kontaktirati nas možete preko tel.broja: 123 45 67, ili e-mail: doniram_truplo@sprovod.hr
+        </p>
+        <p>Copyright©DWAbla</p>
+    </div>
+</footer>
+</body>
+<script src="http://maps.googleapis.com/maps/api/js?language=hr"></script>
+<script src="js/skripta.js"></script>
+</html>

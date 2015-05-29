@@ -1,0 +1,29 @@
+{
+    "name": "lmitak/dwa",
+    "description": "my first composer project",
+    "type": "test",
+    "authors": [
+        {
+            "name": "Luka Mitak",
+            "email": "mitakluka@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+		"php": ">=5.3.0"
+	},
+	"config": {
+     		"github-protocols": ["https"]
+  	},
+
+    "require": {
+		"silex/silex": "1.2.4",
+		"twig/twig": "1.18.1", 
+		"j4mie/idiorm": "v1.5.1 ",
+		"j4mie/paris": "dev-master",
+		"twbs/bootstrap": "3.3.*@dev",
+		"wixel/gump": "dev-master",
+		"franmomu/silex-paris-provider": "1.0.*@dev"
+
+	}
+}
