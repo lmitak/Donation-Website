@@ -1,0 +1,36 @@
+{% extends 'basic_view.twig' %}
+
+{% block content %}
+<div class="row">
+    <div class="column column-6">
+	
+	<h2><strong>O tvrtci</strong></h2>
+	</br></br>
+	Naziv tvrtke:
+	</br>Tip tvrtke:
+	</br>Adresa tvrtke:
+	</br>Registrana:
+	</br>Rating:<div class="rating">
+<span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
+</div>
+	</br></br>
+	<button type = "submit">Uredi podatke</button>
+	</br></br>
+	
+	<label for="kolicina">Kolicina popusta:</label> <input type="kolicina" id="kolicina" name="kolicina"></br></br>
+	<label for="vrijeme">Vrijeme akcije:</label> <input type="vrijeme" id="vrijeme" name="vrijeme"></br></br>
+	
+	
+	
+	</div>
+	<div class="column column-6">
+	<h2><strong>Komentari</strong></h2>
+	
+	
+	</div>
+	</div>
+	
+
+
+
+{% endblock %}

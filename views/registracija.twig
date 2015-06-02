@@ -1,0 +1,32 @@
+{% extends 'basic_view.twig' %}
+
+{% block content %}
+
+
+
+
+
+<div class="testbox">
+  <h1>Registracija</h1>
+
+  <form method="post">
+      
+  <label id="icon" for="name"><i class="icon-mail "></i></label>
+  <input type="text" name="email" id="email" placeholder="Email" required/>
+  <label id="icon" for="name"><i class="icon-user "></i></label>
+  <input type="text" name="name" id="name" placeholder="Korisničko ime" required/>
+  <label id="icon" for="name"><i class="icon-key "></i></label>
+  <input type="password" name="password" id="password" placeholder="Lozinka" required/>
+  <label id="icon" for="name"><i class="icon-key "></i></label>
+  <input type="password" name="password2" id="password2" placeholder="Ponoviti Lozinku" required/>
+  </br>
+  
+  
+  </br>
+  
+   
+   <button class="btn btn-lg btn-primary btn-block" type="submit">Registriraj se</button>
+  </form>
+</div>
+
+{% endblock %}

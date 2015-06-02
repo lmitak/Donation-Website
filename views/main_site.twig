@@ -9,13 +9,20 @@
                     <label>Filtriraj sadržaj: </label>
                     <label for="tip" style="padding-left:1.8%">Tip trgovine:</label>
                     <select name="tip" id="tip">
+                        <option value="sve">Sve</option>
+                        {% for tip in tipovi %}
+                            <option value="{{ tip.idTipa }}">{{ tip.naziv }}</option>
+                        {% endfor %}
+                        <!--
                         <option value="pekara">Pekara</option>
-                        <option value="opca">Opća</option>
+                        <option value="trgovina">Trgovina</option>
                         <option value="mesinca">Mesnica</option>
-                        <option value="vocarna">Voćarna</option>
+                        <option value="vocarna">Voćarna</option>-->
                     </select>
                     <input type="checkbox" name="free" id="free"/>
                     <label for="free">Prikaži samo besplatno</label>
+                    <!--<input type="submit" value="Filtriraj" id="filter" onclick="filtriraj()"/>-->
+                    <button type="button" onclick="filtriraj()">Filtriraj</button>
                 </form>
                 <div id="map"></div>
             </div>
