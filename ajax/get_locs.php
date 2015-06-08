@@ -18,7 +18,7 @@ try{
 //dodati još provjeru da li je dostupno sadržaja
     $sql = "SELECT * FROM tvrtka
         JOIN tipTvrtke ON idTipa = tip
-        WHERE (latitude BETWEEN {$_POST['lat']}-0.08 AND {$_POST['lat']}+0.08) AND (longitude BETWEEN {$_POST['lng']}-0.08 AND {$_POST['lng']}+0.08)";
+        WHERE (latitude BETWEEN {$_POST['lat']}-0.05 AND {$_POST['lat']}+0.05) AND (longitude BETWEEN {$_POST['lng']}-0.05 AND {$_POST['lng']}+0.05)";
     $array = array();
     foreach($dbh->query($sql) as $row){
         array_push($array, $row);

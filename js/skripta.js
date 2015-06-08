@@ -1,5 +1,13 @@
+/*varijable mape*/
 var map;
 var markersArray;
+var autocomplete;
+var youMarker;
+/*varijable ratinga*/
+var zvijezde;
+/*varijable sklopke*/
+var radiosDa, radiosNe, sklopke;
+
 function initialize() {
     var mapOptions = {
         zoom: 16,
@@ -9,6 +17,95 @@ function initialize() {
     map = new google.maps.Map(document.getElementById('map'),
         mapOptions);
 
+    // Create the autocomplete object and associate it with the UI input control.
+    // Restrict the search to the default country, and to place type "cities".
+    autocomplete = new google.maps.places.Autocomplete(
+        /** @type {HTMLInputElement} */(document.getElementById('autocomplete')),
+        {
+            /*types: ['(cities)'],*/
+            language: "hr"
+            /*componentRestrictions: countryRestrict*/
+        });
+    places = new google.maps.places.PlacesService(map);
+
+    google.maps.event.addListener(autocomplete, 'place_changed', onPlaceChanged);
+
+
+    // When the user selects a city, get the place details for the city and
+    // zoom the map in on the city.
+    function onPlaceChanged() {
+        var place = autocomplete.getPlace();
+        if (place.geometry) {
+            map.panTo(place.geometry.location);
+            clearMarkers();
+            youMarker.setMap(null);
+            centerYourself(place.geometry.location);
+            obavi_ajax_promise(place.geometry.location.A, place.geometry.location.F);
+            filtriraj();
+        } else {
+            document.getElementById('autocomplete').placeholder = 'Upiši adresu';
+        }
+
+    }
+
+    function clearMarkers() {
+        for (var i = 0; i < markersArray.length; i++) {
+            if (markersArray[i]) {
+                markersArray[i][0].setMap(null);
+            }
+        }
+        markersArray = [];
+    }
+
+    function centerYourself(position){
+        youMarker = new google.maps.Marker({
+            position: position,
+            animation: google.maps.Animation.BOUNCE
+        })
+
+        var youInfowindow = new google.maps.InfoWindow({
+            content: 'Ti si tu'
+        });
+
+        youMarker.setMap(map);
+        youInfowindow.open(map, youMarker);
+
+        map.setCenter(position);
+    }
+
+
+    function obavi_ajax_promise(positionLatitude, positionLongitude){
+        promise_ajax_upit(positionLatitude, positionLongitude).then(function(response){
+            console.log("Success!", response);
+            markersArray = [new Array(response.length), new Array(3)];
+            var markArray = [];
+            for(var i = 0; i < response.length; i++){
+
+                markersArray[i][0] = new google.maps.Marker({
+                    position: new google.maps.LatLng(response[i]['latitude'], response[i]['longitude']),
+                    icon: 'images/small/' + response[i]['ikona'],
+                    map: map
+                });
+
+                markersArray[i][1] = response[i]['idTipa'];
+                markersArray[i][2] = markArray[2] = response[i]['kolPopusta'] == 100;
+
+                var content = "<h2>" + response[i][2] +  "</h2>";
+                content += "<div style='width:200px;'>";
+                content += "<p>Adresa: " + response[i][4] +"</p>";
+                content += "<p>Popust: " + response[i]['kolPopusta'] +"</p>";
+                content += "<p>Trajanje akcije: " + response[i]['vrijemePopusta'] +"</p>";
+                content += "<a href='info=" + response[i]['idTvrtke'] + "'>Informacije o tvrtki</a>"
+                content += "</div>";
+
+                attachSecretMessage(markersArray[i][0], content);
+            }
+        }, function(error){
+            console.error("Failed!", error);
+        });
+    }
+
+
     var geoOptions = {
         timeout: 10 * 100
     }
@@ -17,52 +114,24 @@ function initialize() {
             var pos = new google.maps.LatLng(position.coords.latitude,
                 position.coords.longitude);
 
-
-
-            var youMarker = new google.maps.Marker({
-                position: pos,
-                animation: google.maps.Animation.BOUNCE
-            })
-
-            var youInfowindow = new google.maps.InfoWindow({
-                content: 'Ti si tu'
-            });
-
-            youMarker.setMap(map);
-            youInfowindow.open(map, youMarker);
-
-            map.setCenter(pos);
-
-
-            //ajax_upit(position.coords.latitude, position.coords.longitude);
-            //alert(lokacije);
+            centerYourself(pos);
+            obavi_ajax_promise(position.coords.latitude, position.coords.longitude);
+/*
             promise_ajax_upit(position.coords.latitude, position.coords.longitude).then(function(response){
                 console.log("Success!", response);
                 markersArray = [new Array(response.length), new Array(3)];
                 var markArray = [];
-                var windows = [];
                 for(var i = 0; i < response.length; i++){
 
-/*
-                    markArray[0] = new google.maps.Marker({
-                        position: new google.maps.LatLng(response[i]['latitude'], response[i]['longitude']),
-                        icon: 'images/small/' + response[i]['ikona'],
-                        map: map
-                    });
-
-                    markArray[1] = response[i]['12'];
-                    markArray[2] = response[i]['kolPopusta'] == 100;
-                    markersArray[i] = markArray;*/
                     markersArray[i][0] = new google.maps.Marker({
                         position: new google.maps.LatLng(response[i]['latitude'], response[i]['longitude']),
                         icon: 'images/small/' + response[i]['ikona'],
                         map: map
                     });
-                    //markersArray[i][1] = response[i]['12'];
+
                     markersArray[i][1] = response[i]['idTipa'];
                     markersArray[i][2] = markArray[2] = response[i]['kolPopusta'] == 100;
-                    //alert(markersArray);
-                    //alert("i je :" + i + ", markArray je: " + markArray + "\n, markersArray je : " + markersArray);
+
                     var content = "<h2>" + response[i][2] +  "</h2>";
                     content += "<div style='width:200px;'>";
                     content += "<p>Adresa: " + response[i][4] +"</p>";
@@ -71,13 +140,11 @@ function initialize() {
                     content += "<a href='Info'>Informacije o tvrtki</a>"
                     content += "</div>";
 
-
                     attachSecretMessage(markersArray[i][0], content);
-
                 }
             }, function(error){
                 console.error("Failed!", error);
-            });
+            });*/
 
         }, function() {
             handleNoGeolocation(true);
@@ -116,50 +183,6 @@ function attachSecretMessage(marker, content) {
 }
 
 
-/*
-document.addEventListener("DOMContentLoaded", function(event) {
-
-});
-*/
-/*
-function ajax_upit(latitude, longitude){
-
-    if (window.XMLHttpRequest) {
-        // code for IE7+, Firefox, Chrome, Opera, Safari
-        hr = new XMLHttpRequest();
-    } else {
-        // code for IE6, IE5
-        hr = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    var url = "ajax/get_locs.php";
-
-    var vars = "lat="+latitude+"&lng="+longitude;
-    hr.open("POST", url, true);
-    hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-    hr.onreadystatechange = function() {
-        if (hr.readyState == 4 && hr.status == 200) {
-
-            //console.log(xmlhttp.responeTest);
-            var popis=JSON.parse(hr.responseText);
-            if (popis.ERROR)
-                if (popis.ERROR.length > 0) {
-                    alert(popis.ERROR);
-                    return;
-                }
-
-            if (popis.length > 0) {
-                console.log(popis);
-                lokacije = popis;
-            }
-
-
-        }
-    }
-    //hr.open("GET","ajax_part.php?upit="+filter.value,true);
-    hr.send(vars);
-}
-*/
 function promise_ajax_upit(latitude, longitude){
     
 
@@ -200,56 +223,7 @@ function filtriraj(){
     var tip_trgovine = document.getElementById("tip");
     var besplatno = document.getElementById("free");
     var tipovi = document.getElementsByTagName("option");
-    console.log(tipovi.length);
     if(besplatno.checked){
-
-        /*switch (tip_trgovine.value){
-            case "pekarna":
-                for(var i = 0; i < markersArray.length; i++){
-                    if(markersArray[i][1] != "Pekarna" || markersArray[i][2] != true){
-                        markersArray[i][0].setMap(null);
-                    }else{
-                        markersArray[i][0].setMap(map);
-                    }
-                }
-                break;
-            case "mesnica":
-                for(var i = 0; i < markersArray.length; i++){
-                    if(markersArray[i][1] != "Mesnica" || markersArray[i][2] != true){
-                        markersArray[i][0].setMap(null);
-                    }else{
-                        markersArray[i][0].setMap(map);
-                    }
-                }
-                break;
-            case "vocarna":
-                for(var i = 0; i < markersArray.length; i++){
-                    if(markersArray[i][1] != "Voćarna" || markersArray[i][2] != true){
-                        markersArray[i][0].setMap(null);
-                    }else{
-                        markersArray[i][0].setMap(map);
-                    }
-                }
-                break;
-            case "trgovina":
-                for(var i = 0; i < markersArray.length; i++){
-                    if(markersArray[i][1] != "Trgovina" || markersArray[i][2] != true){
-                        markersArray[i][0].setMap(null);
-                    }else{
-                        markersArray[i][0].setMap(map);
-                    }
-                }
-                break;
-            default:
-                for(var i = 0; i < markersArray.length; i++){
-                    if(markersArray[i][2] != true){
-                        markersArray[i][0].setMap(null);
-                    }else{
-                        markersArray[i][0].setMap(map);
-                    }
-                }
-                break;
-        }*/
         for(var i = 0; i < markersArray.length; i++){
             if((tip_trgovine.value == markersArray[i][1] || tip_trgovine.value === "sve") && markersArray[i][2] === true){
                 markersArray[i][0].setMap(map);
@@ -264,54 +238,7 @@ function filtriraj(){
 
     }else{
         console.log("besplatno nije klinkuto, a value je:" + tip_trgovine.value);
-        /*switch (tip_trgovine.value){
-            case "pekara":
-                //console.log("pekare");
-                for(var i = 0; i < markersArray.length; i++){
-                    if(markersArray[i][1] != "Pekara"){
-                        markersArray[i][0].setMap(null);
-                        console.log("nije pekara nego je " + markersArray[i][1]);
-                    }else{
-                        markersArray[i][0].setMap(map);
-                        console.log("je pekara");
-                    }
-                }
-                break;
-            case "mesnica":
-                for(var i = 0; i < markersArray.length; i++){
-                    if(markersArray[i][1] != "Mesnica"){
-                        markersArray[i][0].setMap(null);
-                    }else{
-                        markersArray[i][0].setMap(map);
-                    }
-                }
-                break;
-            case "vocarna":
-                for(var i = 0; i < markersArray.length; i++){
-                    if(markersArray[i][1] != "Voćarna"){
-                        markersArray[i][0].setMap(null);
-                        console.log("nije vocarna nego je " + markersArray[i][1]);
-                    }else{
-                        markersArray[i][0].setMap(map);
-                        console.log("je vocarna");
-                    }
-                }
-                break;
-            case "trgovina":
-                for(var i = 0; i < markersArray.length; i++){
-                    if(markersArray[i][1] != "Trgovina"){
-                        markersArray[i][0].setMap(null);
-                    }else{
-                        markersArray[i][0].setMap(map);
-                    }
-                }
-                break;
-            default:
-                for(var i = 0; i < markersArray.length; i++){
-                    markersArray[i][0].setMap(map);
-                }
-                break;
-        }*/
+
         for(var i = 0; i < markersArray.length; i++){
             if(tip_trgovine.value == markersArray[i][1] || tip_trgovine.value === "sve"){
                 markersArray[i][0].setMap(map);
@@ -321,9 +248,195 @@ function filtriraj(){
             }else{
                 markersArray[i][0].setMap(null);
             }
-
         }
     }
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
+
+
+ document.addEventListener("DOMContentLoaded", function(event) {
+     if(document.getElementById('rating') || document.getElementById('rating2')){
+         inicijalizirajRating();
+     }
+     if(document.getElementById('sklopka')){
+         postavkeSklopke();
+     }
+
+ });
+
+//funkcije ratinha\\
+
+
+function inicijalizirajRating(){
+    zvijezde = [];
+    var boja;
+    for(var i = 1; i < 6; i++){
+        zvijezde[i] = document.getElementById(i);
+    }
+    console.log(zvijezde);
+
+    if(document.getElementById('rating') != null){
+        boja = "#29C2FF";
+        var ratingLista = document.getElementById('rating');
+        for(var i = 1; i < 6; i++){
+            osvijetljenje(zvijezde[i], i);
+        }
+    }else{
+        var ratingLista = document.getElementById('rating2');
+        boja = "rgba(255, 201, 84, 1)";
+    }
+
+    var rating = ratingLista.getAttribute('value');
+    console.log(rating);
+    pocetniRating(boja);
+
+
+    function osvijetljenje(zvijezda, i){
+
+        zvijezda.onmouseover = function(){
+            console.log("i =" + i);
+            for(var j = 1; j <= i; j++){
+                zvijezde[j].style.color = "rgba(255, 201, 84, 1)";
+            }
+
+        };
+
+        zvijezda.onmouseout = function(){
+            pocetniRating();
+        };
+
+        zvijezda.onclick = function(){
+            rating_ajax(i);
+        };
+    }
+
+    function pocetniRating(boja){
+        for(i = 1; i <= zvijezde.length; i++){
+            if(i <= rating){
+                zvijezde[i].style.color = boja;
+            }else{
+                zvijezde[i].style.color = "rgba(90, 90, 90, 1)";
+            }
+        }
+    }
+
+    function rating_ajax(star_nmbr){
+        var nazivTvrtke = document.getElementById('naziv');
+        var adresaTvrtke = document.getElementById('adresa');
+        var naziv = nazivTvrtke.innerHTML.split(": ");
+        var adresa = adresaTvrtke.innerHTML.split(": ");
+
+        var hr = new XMLHttpRequest();
+        // Create some variables we need to send to our PHP file
+        var url = "ajax/rate.php";
+
+        var vars = "stars=" + star_nmbr + "&nazivTvrtke=" + naziv[1] + "&adresaTvrtke=" + adresa[1];
+
+        hr.open("POST", url, true);
+        // Set content type header information for sending url encoded variables in the request
+        hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        // Access the onreadystatechange event for the XMLHttpRequest object
+        hr.onreadystatechange = function() {
+            if(hr.readyState == 4 && hr.status == 200)
+            {
+                console.log(hr.responseText);
+                if(hr.responseText == "success"){
+                    lock_stars(star_nmbr);
+                }else{
+                    alert("Ispričavamo se, došlo je do pogreške, msg=" + hr.responseText);
+                }
+            }
+        };
+        // Send the data to PHP now... and wait for response to update the status div
+        hr.send(vars);
+        // Actually execute the request
+    }
+
+    function lock_stars(star_nmbr){
+        for(var i = 1; i <= zvijezde.length; i++){
+            if(star_nmbr >= i){
+                zvijezde[i].style.color = "rgba(255, 201, 84, 1)";
+            }else{
+                zvijezde[i].style.color = "rgba(90, 90, 90, 1)";
+            }
+            disable_mouse(zvijezde[i]);
+        }
+    }
+
+    function disable_mouse(zvijezda){
+        zvijezda.onmouseover = false;
+        zvijezda.onclick = false;
+        zvijezda.onmouseout = false;
+    }
+}
+
+
+
+//dodavanje komentara u bazu i prikazivanje na stranici
+function addComent(){
+    var komentar = document.getElementById("comment");
+    var nazivTvrtke = document.getElementById('naziv');
+    var adresaTvrtke = document.getElementById('adresa');
+    var naziv = nazivTvrtke.innerHTML.split(": ");
+    var adresa = adresaTvrtke.innerHTML.split(": ");
+
+    var hr = new XMLHttpRequest();
+    // Create some variables we need to send to our PHP file
+    var url = "ajax/comment.php";
+    var vars = "comment=" + komentar.value + "&nazivTvrtke=" + naziv[1] + "&adresaTvrtke=" + adresa[1];
+
+    hr.open("POST", url, true);
+    // Set content type header information for sending url encoded variables in the request
+    hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    hr.onreadystatechange = function() {
+        if(hr.readyState == 4 && hr.status == 200)
+        {
+            console.log(hr.responseText);
+
+            if(hr.responseText == "success"){
+                var comment_place = document.getElementById('newComment');
+                comment_place.innerHTML = komentar.value;
+            }else{
+                alert("Ispričavamo se, došlo je do pogreške, msg=" + hr.responseText);
+            }
+        }
+    };
+    hr.send(vars);
+}
+
+function postavkeSklopke(){
+    radiosDa = document.getElementsByClassName("radioDa");
+    radiosNe = document.getElementsByClassName("radioNe");
+    sklopke = document.getElementsByClassName("sklopke");
+    for(var i = 0; i < radiosDa.length; i++){
+        if(radiosDa[i].checked) {
+            radiosDa[i].previousElementSibling.style.color = "white";
+
+        }else{
+            radiosNe[i].previousElementSibling.style.color = "white";
+            sklopke[i].style.transform = "translateX(50px)";
+        }
+        promjeniStanjeSklopke(radiosDa[i], radiosNe[i], sklopke[i], i)
+    }
+
+
+    function promjeniStanjeSklopke(radioDa, radioNe, sklopka, i){
+
+        radioDa.onclick = function(){
+            radiosDa[i].previousElementSibling.style.color = "white";
+            radiosNe[i].previousElementSibling.style.color = "rgba(15,15,15,0.6)";
+            sklopke[i].style.transform = "translateX(0px)";
+            radiosDa[i].checked = true;
+        }
+
+        radioNe.onclick = function(){
+            radiosNe[i].previousElementSibling.style.color = "white";
+            radiosDa[i].previousElementSibling.style.color = "rgba(15,15,15,0.6)";
+            sklopke[i].style.transform = "translateX(50px)";
+            radiosNe[i].checked = true;
+        }
+
+    }
+
+}

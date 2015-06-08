@@ -1,0 +1,79 @@
+{% extends 'basic_view.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="column column-12" id="profil">
+            <table>
+                <tr>
+                    <td>Korisničko ime:</td>
+                    <td>{{ korisnik.username }}</td>
+                </tr>
+                <tr>
+                    <td>Email:</td>
+                    <td>{{ korisnik.email }}</td>
+                </tr>
+            </table>
+            <button type="button" id="editInfo" onclick="editInfo()">Uredi podatke</button>
+
+            <h2>Tvrtke:</h2>
+            {% if tvrtke != null %}
+                <table>
+                    <tr>
+                        <th>Naziv</th>
+                        <th>Adresa</th>
+                        <th>Popust (%)</th>
+                        <th>Vrijeme akcije</th>
+                        <th>Dostupnost</th>
+                    </tr>
+                {% for tvrtka in tvrtke %}
+                    <tr>
+                        <td>{{ tvrtka.naziv }}</td>
+                        <td>{{ tvrtka.adresa }}</td>
+                        {% if tvrtka.kolPopusta == null %}
+                            <td><input type="text" class="kolPopusta"></td>
+                        {% else %}
+                            <td><input type="text" class="kolPopusta" value="{{ tvrtka.kolPopusta }}"></td>
+                        {% endif %}
+                        {% if tvrtka.vrijemePopusta == null %}
+                            <td><input type="text" class="vrijemePopusta"></td>
+                        {% else %}
+                            <td><input type="text" class="vrijemePopusta" value="{{ tvrtka.vrijemePopusta }}"></td>
+                        {% endif %}
+
+
+                        <td>
+                            <div id="skolpkaContainer">
+                                <div id="sklopka" class="sklopke"></div>
+                            {% if tvrtka.dostupno == 1 %}
+
+                                    <label for="da{{ tvrtka.idTvrtke }}">Da</label>
+                                    <input type="radio" name="{{ tvrtka.idTvrtke }}" id="da{{ tvrtka.idTvrtke }}" value="1" class="radioDa" checked>
+                                    <label for="ne{{ tvrtka.idTvrtke }}">Ne</label>
+                                    <input type="radio" name="{{ tvrtka.idTvrtke }}" id="ne{{ tvrtka.idTvrtke }}" value="0" class="radioNe">
+                                {% else %}
+                                    <label for="da{{ tvrtka.idTvrtke }}">Da</label>
+                                    <input type="radio" name="{{ tvrtka.idTvrtke }}" id="da{{ tvrtka.idTvrtke }}" value="1" class="radioDa">
+                                    <label for="ne{{ tvrtka.idTvrtke }}">Ne</label>
+                                    <input type="radio" name="{{ tvrtka.idTvrtke }}" id="ne{{ tvrtka.idTvrtke }}" value="0" class="radioNe" checked>
+                            {% endif %}
+                            </div>
+                        </td>
+
+                        <td>
+                            <button type="button" onclick="spremiPromjene()" class="spremiPromjene">Spremi</button>
+                        </td>
+                        <td>
+                            <button type="button" onclick="urediFirmu()" class="urediFirmu">Uredi podatke</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </table>
+            {% endif %}
+            <a href="dodajFirmu"><button type="button" id="dodajFirmu">Dodaj firmu</button></a>
+        </div>
+    </div>
+
+
+
+
+{% endblock %}

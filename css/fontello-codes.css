@@ -1,4 +1,6 @@
 
-.icon-mail:before { content: '\e800'; } /* '' */
-.icon-user:before { content: '\e801'; } /* '' */
-.icon-key:before { content: '\e802'; } /* '' */
+.icon-star:before { content: '\e800'; } /* '' */
+.icon-star-empty:before { content: '\e801'; } /* '' */
+.icon-mail:before { content: '\e802'; } /* '' */
+.icon-user:before { content: '\e803'; } /* '' */
+.icon-key:before { content: '\e804'; } /* '' */

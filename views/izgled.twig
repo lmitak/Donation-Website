@@ -1,35 +1,57 @@
 {% extends 'basic_view.twig' %}
 
 {% block content %}
-<div class="row">
-    <div class="column column-6">
-	
-	<h2><strong>O tvrtci</strong></h2>
-	</br></br>
-	Naziv tvrtke:
-	</br>Tip tvrtke:
-	</br>Adresa tvrtke:
-	</br>Registrana:
-	</br>Rating:<div class="rating">
-<span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
-</div>
-	</br></br>
-	<button type = "submit">Uredi podatke</button>
-	</br></br>
-	
-	<label for="kolicina">Kolicina popusta:</label> <input type="kolicina" id="kolicina" name="kolicina"></br></br>
-	<label for="vrijeme">Vrijeme akcije:</label> <input type="vrijeme" id="vrijeme" name="vrijeme"></br></br>
-	
-	
-	
-	</div>
-	<div class="column column-6">
-	<h2><strong>Komentari</strong></h2>
-	
-	
-	</div>
-	</div>
-	
+    <div class="row">
+        <div class="column column-6" id="info">
+
+            <h2>O tvrtci</h2>
+            <p id="naziv">Naziv tvrtke: {{ naziv }}</p>
+            <p>Tip tvrtke: {{tip}}</p>
+            <p id="adresa">Adresa tvrtke: {{adresa}}</p>
+            <p>Registrana: </p>
+            <p>Rating:</p>
+            {% if antispamming.rated == false %}
+            <ul id="rating" value="{{ rating }}">
+            {% else %}
+            <ul id="rating2" value="{{ antispamming.rateAmount }}">
+            {% endif %}
+                <li id="1"><i class="icon-star"></i></li>
+                <li id="2"><i class="icon-star"></i></li>
+                <li id="3"><i class="icon-star"></i></li>
+                <li id="4"><i class="icon-star"></i></li>
+                <li id="5"><i class="icon-star"></i></li>
+            </ul>
+
+            <br>
+            <h2>Podaci o proizvodima</h2>
+            <p>Kolicina popusta: {{kolicina}}%</p>
+            <p>Vrijeme akcije: {{vrijeme}}</p>
+
+        </div>
+
+        <div class="column column-6">
+            <h2><strong>Komentari</strong></h2>
+            <div id="komentari">
+                <ul>
+                {% for  komentar in komentari %}
+                    <li>{{ komentar.komentar }}</li>
+                {% endfor %}
+
+                {% if isUser == false and antispamming.commented == 0 %}
+                    <li id="newComment">
+                        <div>
+                            <input type="text" name="comment" id="comment" placeholder="Ostavi svoj komentar ovdje..."/>
+                            <button type="button" id="addComment" onclick="addComent()">>></button>
+                        </div>
+
+                    </li>
+                {% endif %}
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
 
 
 

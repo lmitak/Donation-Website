@@ -18,15 +18,20 @@
 		{%  if  app.session.get('user') %}
 		
 		<ul>
-			<li><a href="logout">Odjavi se</a></li>
+            <!--<li><a href="/din/Donation-Website-master/info">Moj profil</a>
+			<li><a href="logout">Odjavi se</a></li>-->
+            <li><a href="info">Moj profil</a></li>
+            <li><a href="logout">Odjavi se</a></li>
 		</ul>
       
 {% else %}
     <ul>
-            <li><a href="/din/Donation-Website-master/prijava">Prijavi se</a></li>
+            <!--<li><a href="/din/Donation-Website-master/prijava">Prijavi se</a></li>-->
+            <li><a href="prijava">Prijavi se</a></li>
             <li>
                 Nisi još korisnik, a želiš prijaviti svoju tvrtku?<br>
-                <a href="/din/Donation-Website-master/registracija">Registriraj se</a>
+                <!--<a href="/din/Donation-Website-master/registracija">Registriraj se</a>-->
+                <a href="registracija">Registriraj se</a>
             </li>
         </ul>
 {% endif %}
@@ -57,6 +62,7 @@
     </div>
 </footer>
 </body>
-<script src="http://maps.googleapis.com/maps/api/js?language=hr"></script>
+<script src="http://maps.googleapis.com/maps/api/js?language=hr&libraries=places"></script>
+<!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>-->
 <script src="js/skripta.js"></script>
 </html>
