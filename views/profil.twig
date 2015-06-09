@@ -13,7 +13,7 @@
                     <td>{{ korisnik.email }}</td>
                 </tr>
             </table>
-            <button type="button" id="editInfo" onclick="editInfo()">Uredi podatke</button>
+            <a href="editUser"><button type="button" id="editInfo">Uredi podatke</button></a>
 
             <h2>Tvrtke:</h2>
             {% if tvrtke != null %}
@@ -60,10 +60,10 @@
                         </td>
 
                         <td>
-                            <button type="button" onclick="spremiPromjene()" class="spremiPromjene">Spremi</button>
+                            <button type="button"  class="spremiPromjene">Spremi</button>
                         </td>
                         <td>
-                            <button type="button" onclick="urediFirmu()" class="urediFirmu">Uredi podatke</button>
+                            <a href="urediTvrtku={{ tvrtka.idTvrtke }}"><button type="button"  class="urediFirmu">Uredi podatke</button></a>
                         </td>
                     </tr>
                 {% endfor %}

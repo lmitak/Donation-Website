@@ -8,6 +8,31 @@ var zvijezde;
 /*varijable sklopke*/
 var radiosDa, radiosNe, sklopke;
 
+
+document.addEventListener("DOMContentLoaded", function(event) {
+
+    if(document.getElementById('map')){
+        google.maps.event.addDomListener(window, 'load', initialize);
+    }
+
+    if(document.getElementById('rating') || document.getElementById('rating2')){
+        inicijalizirajRating();
+    }
+    if(document.getElementById('sklopka')){
+        postavkeSklopke();
+    }
+
+    if(document.getElementById('autocomplete_places')){
+        autocomplete_places();
+    }
+
+    if(document.getElementsByClassName("spremiPromjene").length > 0){
+        intializeSpremiPromjene();
+    }
+
+});
+
+
 function initialize() {
     var mapOptions = {
         zoom: 16,
@@ -252,19 +277,6 @@ function filtriraj(){
     }
 }
 
-google.maps.event.addDomListener(window, 'load', initialize);
-
-
- document.addEventListener("DOMContentLoaded", function(event) {
-     if(document.getElementById('rating') || document.getElementById('rating2')){
-         inicijalizirajRating();
-     }
-     if(document.getElementById('sklopka')){
-         postavkeSklopke();
-     }
-
- });
-
 //funkcije ratinha\\
 
 
@@ -440,3 +452,119 @@ function postavkeSklopke(){
     }
 
 }
+//funkcije za autocomplete adrese bez mape
+function autocomplete_places(){
+    autocomplete = new google.maps.places.Autocomplete(
+        /** @type {HTMLInputElement} */(document.getElementById('autocomplete_places')),
+        {
+            types: ['address'],
+            language: "hr"
+            /*componentRestrictions: countryRestrict*/
+        });
+    geolocate();
+    google.maps.event.addListener(autocomplete, 'place_changed', function(){
+        giveLatLng();
+
+        // Bias the autocomplete object to the user's geographical location,
+        // as supplied by the browser's 'navigator.geolocation' object.
+
+    });
+}
+
+function giveLatLng(){
+    var longitude = document.getElementById('longitude');
+    var latitude = document.getElementById('latitude');
+
+    var place = autocomplete.getPlace();
+    if (place.geometry) {
+        longitude.value = place.geometry.location.F;
+        latitude.value = place.geometry.location.A;
+    }
+
+}
+
+function geolocate() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            var geolocation = new google.maps.LatLng(
+                position.coords.latitude, position.coords.longitude);
+            var circle = new google.maps.Circle({
+                center: geolocation,
+                radius: position.coords.accuracy
+            });
+            autocomplete.setBounds(circle.getBounds());
+        });
+    }
+}
+
+function intializeSpremiPromjene(){
+    var gumbi = document.getElementsByClassName('spremiPromjene');
+
+
+    for(var i = 0; i < gumbi.length; i++){
+        srediKlik(gumbi[i], i);
+    }
+
+    function srediKlik(gumb, i){
+        gumb.onclick = function(){
+            spremiPromjene(i);
+        };
+    }
+}
+
+
+//za brzo spremanje korisnikovih izmjena(oko popusta)
+function spremiPromjene(id){
+    var kolPopusta = document.getElementsByClassName('kolPopusta');
+    var vrijemePopusta = document.getElementsByClassName('vrijemePopusta');
+    var dostupnost;
+
+    var kolPoustaVrijednost = kolPopusta[id].value;
+
+    var vrijemePopustaVrijednost = vrijemePopusta[id].value;
+    if(radiosDa[id].checked){
+        dostupnost = 1;
+    }else{
+        dostupnost = 0;
+    }
+    var hr = new XMLHttpRequest();
+    // Create some variables we need to send to our PHP file
+    var url = "ajax/promjene_tvrtke.php";
+    var vars = "kolPopusta=" + kolPoustaVrijednost + "&vrijemePopusta=" + vrijemePopustaVrijednost + "&dostupnost=" + dostupnost + "&idTvrtke=" + id;
+
+    hr.open("POST", url, true);
+    // Set content type header information for sending url encoded variables in the request
+    hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    hr.onreadystatechange = function() {
+        if(hr.readyState == 4 && hr.status == 200)
+        {
+            console.log(hr.responseText);
+
+            if(hr.responseText == "success"){
+                alert("Uspješna izmjena")
+            }else{
+                alert("Ispričavamo se, došlo je do pogreške: " + hr.responseText);
+            }
+        }
+    };
+    hr.send(vars);
+}
+
+function izbrisiTvrtku(id){
+    var hr = new XMLHttpRequest();
+    // Create some variables we need to send to our PHP file
+    var url = "ajax/brisanje_tvrtke.php";
+    var vars = "idTvrtke=" + id;
+
+    hr.open("POST", url, true);
+    // Set content type header information for sending url encoded variables in the request
+    hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    hr.onreadystatechange = function() {
+
+    };
+    hr.send(vars);
+
+}
+
+
+

@@ -1,0 +1,26 @@
+{% extends 'basic_view.twig' %}
+{% block content %}
+<div class="row">
+
+    <form action="addComp"  method="post" id="dodajFirmuForma">
+        <label for="naziv"><p>Naziv tvrtke:</p></label>
+        <input type="text" id="naziv" name="naziv" required autofocus>
+        <label for="tip"><p>Tip tvrtke:</p></label>
+        <select id="tip" name="tip">
+            {% for tip in tipovi %}
+                <option value="{{ tip.idTipa }}">{{ tip.naziv }}</option>
+            {% endfor %}
+        </select>
+        <label for="autocomplete_places"><p>Adresa:</p></label>
+        <input id="autocomplete_places" name="autocomplete_places" type="text" required /><!--onFocus="geolocate()"-->
+        <input type="hidden" id="longitude" name="longitude" value="">
+        <input type="hidden" id="latitude" name="latitude" value="">
+        <label for="web"><p>Web stranica:</p></label>
+        <input type="url" name="web" id="web">
+        <br>
+        <a href="profil"><input type="button" value="Odustani"></a>
+        <input type="submit" value="Dodaj">
+    </form>
+
+</div>
+{% endblock %}

@@ -189,7 +189,8 @@ try{
         $korisnik = ORM::for_table("korisnik")->where('username', 'stipe')->find_one();
         $tvrtke = ORM::for_table("tvrtka")->where('idKorisnika', $korisnik->get("idKorisnika"))->find_many();
         //fake session
-        $app['session']->set('user', array('username' => $korisnik->get['username']));
+
+        $app['session']->set('user', $korisnik->get('username'));
         //treba se staviti session user
         return $app['twig']->render('profil.twig', array('korisnik' => $korisnik, 'tvrtke' => $tvrtke));
 
@@ -198,10 +199,86 @@ try{
 
     $app->get('/dodajFirmu', function () use ($app){
         include_once('logic/idiormUse.php');
-        $korisnik = ORM::for_table("korisnik")->where('username', $app['session']->get('user'))->find_one();
-        var_dump($korisnik);
 
-        
+        if($korisnik = ORM::for_table("korisnik")->where('username', $app['session']->get('user'))->find_one()){
+            $tipovi = ORM::for_table("tipTvrtke")->find_many();
+            return $app['twig']->render('dodajFirmuForma.twig', array('tipovi' => $tipovi));
+        }else
+            return $app->redirect('login');
+    });
+
+    $app->post('/addComp', function (Request $request) use ($app){
+        $parameters = $request->request->all();
+
+        include_once('logic/idiormUse.php');
+
+        $korisnik = ORM::for_table("korisnik")->where('username', $app['session']->get('user'))->find_one();
+
+        if((empty($korisnik)) || ($parameters['naziv'] == null) || ($parameters['autocomplete_places'] == null) ||
+            ($parameters['tip'] == null) || ($parameters['latitude'] == null) || ($parameters['longitude'] == null)){
+            return "Error in input";
+
+        }else{
+            $tvrtka = ORM::for_table("tvrtka")->create();
+
+            $tvrtka->idKorisnika = $korisnik->get("idKorisnika");
+            $tvrtka->naziv = $parameters['naziv'];
+            $tvrtka->adresa = $parameters['autocomplete_places'];
+            $tvrtka->tip = $parameters['tip'];
+            $tvrtka->datumPrijave = date("Y-m-d");
+            $tvrtka->web = $parameters['web'];
+            $tvrtka->latitude = $parameters['latitude'];
+            $tvrtka->longitude = $parameters['longitude'];
+            if($tvrtka->save()){
+                return $app->redirect('profil');
+            }else{
+                return "Error while saving";
+            }
+        }
+    });
+
+    $app->get('/editUser', function () use ($app){
+        include_once('logic/idiormUse.php');
+        $korisnik = ORM::for_table("korisnik")->where('username', $app['session']->get('user'))->find_one();
+
+        return $app['twig']->render('edit_profile.twig', array('korisnik' => $korisnik));
+    });
+
+    $app->get('/urediTvrtku={idTvrtke}', function ($idTvrtke) use ($app) {
+        include_once('logic/idiormUse.php');
+        $tvrtka = ORM::for_table('tvrtka')->where('idTvrtke', $idTvrtke)->find_one();
+        $tipovi = ORM::for_table("tipTvrtke")->find_many();
+
+        return $app['twig']->render('edit_tvrtke.twig', array('tvrtka' => $tvrtka, 'tipovi' => $tipovi));
+    });
+
+    $app->post('/uredi firmu', function(Request $request) use ($app){
+        $parameters = $request->request->all();
+
+        include_once('logic/idiormUse.php');
+
+        $korisnik = ORM::for_table("korisnik")->where('username', $app['session']->get('user'))->find_one();
+
+        if((empty($korisnik)) || ($parameters['naziv'] == null) || ($parameters['autocomplete_places'] == null) ||
+            ($parameters['tip'] == null) || ($parameters['latitude'] == null) || ($parameters['longitude'] == null)){
+            return "Error in input";
+
+        }else{
+            $tvrtka = ORM::for_table('tvrtka')->where('idTvrtke', $parameters['id'])->find_one();
+            $tvrtka->set(array(
+                'naziv' => $parameters['naziv'],
+                'tip' => $parameters['tip'],
+                'adresa' => $parameters['autocomplete_places'],
+                'latitude' => $parameters['latitude'],
+                'longitude' => $parameters['longitude'],
+                'web' => $parameters['web']
+            ));
+            if($tvrtka->save()){
+                return $app->redirect('profil');
+            }else{
+                return "Error while saving";
+            }
+        }
     });
 
 

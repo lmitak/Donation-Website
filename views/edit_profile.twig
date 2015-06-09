@@ -1,0 +1,30 @@
+{% extends 'basic_view.twig' %}
+{% block content %}
+    <div class="row">
+        <div class="column column-12" id="editProfil">
+            <form>
+                <table>
+                    <tr>
+                        <td><label for="username">Korisničko ime:</label></td>
+                        <td><input type="text" name="username" id="username" value="{{ korisnik.username }}"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="password_old">Stara Zaporka:<br>(staru zaporku je potrebno unjeti samo kod stvaranja nove)</label></td>
+                        <td><input type="password" name="password_old" id="password_old"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="password_new">Nova zaporka</label></td>
+                        <td><input type="password" name="password_new" id="password_new"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="email">Email:</label></td>
+                        <td><input type="email" name="email" id="email" value="{{ korisnik.email }}"></td>
+                    </tr>
+                </table>
+                <a href="profil"><input type="button" value="Odustani"></a>
+                <input type="submit" value="Spremi">
+
+            </form>
+        </div>
+    </div>
+{% endblock %}
