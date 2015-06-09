@@ -244,6 +244,33 @@ try{
         return $app['twig']->render('edit_profile.twig', array('korisnik' => $korisnik));
     });
 
+    $app->post('/edit_profile_info', function (Request $request) use ($app){
+        include_once('logic/idiormUse.php');
+        $parameters = $request->request->all();
+        $korisnik = ORM::for_table('korisnik')->find_one($app['session']->get('user'));
+
+        $app['session']->remove('user');
+
+        if(($parameters['password_new'] != "") || ($parameters['password_new'] != null)){
+            if(password_verify($parameters['password_old'],$korisnik->get("password"))){
+                $korisnik->set(array(
+                    'username' => $parameters['username'],
+                    'password' => password_hash($parameters['password'], PASSWORD_DEFAULT),
+                    'email' => $parameters['email']
+                ));
+                if($korisnik->save()){
+                    return $app->redirect('profil');
+                }else{
+                    return "Error while saving";
+                }
+            }else{
+                return "wrong passwords";
+            }
+        }else{
+            return "no old password";
+        }
+    });
+
     $app->get('/urediTvrtku={idTvrtke}', function ($idTvrtke) use ($app) {
         include_once('logic/idiormUse.php');
         $tvrtka = ORM::for_table('tvrtka')->where('idTvrtke', $idTvrtke)->find_one();
