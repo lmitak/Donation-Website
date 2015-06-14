@@ -1,0 +1,2 @@
+Promjeniti na željene podatke baze u logic/idiorm
+i dodati podatke baze(donationdb). 
