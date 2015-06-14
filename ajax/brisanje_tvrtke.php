@@ -20,9 +20,9 @@ if(isset($_SESSION['_sf2_attributes']['user'])){
 
         $dbh = new PDO("mysql:host=$hostname;dbname=$dbName", $user, $pw);
 
-        $provjeraKorisnika = "SELECT * FROM korisnik WHERE username = '{$_SESSION['_sf2_attributes']['user']}'";
+        $provjeraKorisnika = "SELECT * FROM korisnik WHERE username = '{$_SESSION['_sf2_attributes']['user']['username']}'";
         if($dbh->query($provjeraKorisnika)){
-            $upit = "DELETE FROM tvrtka WHERE idTvrtke = {$_POST['idTvrtke']}";
+            $upit = "DELETE FROM tvrtka WHERE id = {$_POST['idTvrtke']}";
             if($dbh->query($upit)){
                 echo "success ";
             }else{

@@ -5,25 +5,26 @@
         <div class="column column-12" id="profil">
             <table>
                 <tr>
-                    <td>Korisničko ime:</td>
+                    <td>{{ profil.korisnicko_ime }}:</td>
                     <td>{{ korisnik.username }}</td>
                 </tr>
                 <tr>
-                    <td>Email:</td>
+                    <td>{{ profil.email }}:</td>
                     <td>{{ korisnik.email }}</td>
                 </tr>
             </table>
-            <a href="editUser"><button type="button" id="editInfo">Uredi podatke</button></a>
+            <a href="editUser"><button type="button" id="editInfo">{{ profil.urediP }}</button></a>
+			</br></br>
 
-            <h2>Tvrtke:</h2>
+            <h2>{{ profil.tvrtke }}:</h2>
             {% if tvrtke != null %}
                 <table>
                     <tr>
-                        <th>Naziv</th>
-                        <th>Adresa</th>
-                        <th>Popust (%)</th>
-                        <th>Vrijeme akcije</th>
-                        <th>Dostupnost</th>
+                        <th>{{ profil.naziv }}</th>
+                        <th>{{ profil.adresa }}</th>
+                        <th>{{ profil.popust }}</th>
+                        <th>{{ profil.vrijeme }}</th>
+                        <th>{{ profil.dostupnost }}</th>
                     </tr>
                 {% for tvrtka in tvrtke %}
                     <tr>
@@ -46,30 +47,32 @@
                                 <div id="sklopka" class="sklopke"></div>
                             {% if tvrtka.dostupno == 1 %}
 
-                                    <label for="da{{ tvrtka.idTvrtke }}">Da</label>
-                                    <input type="radio" name="{{ tvrtka.idTvrtke }}" id="da{{ tvrtka.idTvrtke }}" value="1" class="radioDa" checked>
-                                    <label for="ne{{ tvrtka.idTvrtke }}">Ne</label>
-                                    <input type="radio" name="{{ tvrtka.idTvrtke }}" id="ne{{ tvrtka.idTvrtke }}" value="0" class="radioNe">
+                                    <label for="da{{ tvrtka.id }}">{{ profil.da }}</label>
+                                    <input type="radio" name="{{ tvrtka.id }}" id="da{{ tvrtka.id }}" value="1" class="radioDa" checked>
+                                    <label for="ne{{ tvrtka.id }}">{{ profil.ne }}</label>
+                                    <input type="radio" name="{{ tvrtka.id }}" id="ne{{ tvrtka.idT }}" value="0" class="radioNe">
                                 {% else %}
-                                    <label for="da{{ tvrtka.idTvrtke }}">Da</label>
-                                    <input type="radio" name="{{ tvrtka.idTvrtke }}" id="da{{ tvrtka.idTvrtke }}" value="1" class="radioDa">
-                                    <label for="ne{{ tvrtka.idTvrtke }}">Ne</label>
-                                    <input type="radio" name="{{ tvrtka.idTvrtke }}" id="ne{{ tvrtka.idTvrtke }}" value="0" class="radioNe" checked>
+                                    <label for="da{{ tvrtka.id }}">{{ profil.da }}</label>
+                                    <input type="radio" name="{{ tvrtka.id }}" id="da{{ tvrtka.id }}" value="1" class="radioDa">
+                                    <label for="ne{{ tvrtka.id }}">{{ profil.ne }}</label>
+                                    <input type="radio" name="{{ tvrtka.id }}" id="ne{{ tvrtka.id }}" value="0" class="radioNe" checked>
                             {% endif %}
                             </div>
                         </td>
 
                         <td>
-                            <button type="button"  class="spremiPromjene">Spremi</button>
+                            <button type="button"  class="spremiPromjene" id="{{ tvrtka.id }}">{{ profil.spremi }}</button>
                         </td>
                         <td>
-                            <a href="urediTvrtku={{ tvrtka.idTvrtke }}"><button type="button"  class="urediFirmu">Uredi podatke</button></a>
+                            <a href="urediTvrtku={{ tvrtka.id }}"><button type="button"  class="urediFirmu">{{ profil.urediT }}</button></a>
                         </td>
                     </tr>
                 {% endfor %}
                 </table>
             {% endif %}
-            <a href="dodajFirmu"><button type="button" id="dodajFirmu">Dodaj firmu</button></a>
+			</br>
+            <a href="dodajFirmu"><button type="button" id="dodajFirmu">{{ profil.dodaj }}</button></a>
+			</br></br>
         </div>
     </div>
 

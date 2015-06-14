@@ -1,0 +1,56 @@
+{% extends 'basic_view.twig' %}
+
+{% block content %}
+
+<div class="row">
+        <div class="column column-6" id="admin">
+{%  if  app.session.get('user') %}
+		{% set user = app.session.get('user') %}
+		
+		{% if user['isAdmin'] %}
+</br>
+ <table>
+                <tr>
+				
+				<th>{{ postavke.korisnicko_ime }}</th>
+				<th>{{ postavke.email }}</th>
+                 </tr>
+				 </table>
+{% for ime in korisnik %}
+{% set id=ime.id %}
+ 
+				 <table>
+				 <tr>
+				 
+				 <td>{{ ime.username }}</td>
+				 <td>{{ ime.email }}</td>
+				 <td><form method="post">
+<input type="hidden" id="haha" name="haha" value={{id}}/>
+
+<button  id="admin-gumb" type="submit" >{{ postavke.obrisi }}</button>
+
+</form> </td>
+				 
+				 </tr>
+				
+ </table>
+
+</form>
+</br>
+</br>
+{%endfor%}
+{%else%}
+
+Nemaš ovlasti
+
+{%endif%}
+
+{%else%}
+Nemaš ovlasti
+
+
+{%endif%}
+</div></div>
+
+
+{% endblock %}

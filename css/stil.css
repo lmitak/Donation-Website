@@ -23,19 +23,19 @@ select {
 
 }
 
-p {
-  /*font-size: 12px;
+.testbox p {
+  font-size: 12px;
   width: 150px;
   display: inline-block;
-  margin-left: 18px;*/
+  margin-left: 18px;
 }
-h1 {
-  /*font-size: 32px;
+.testbox h1 {
+  font-size: 32px;
   font-weight: 300;
   color: #4c4c4c;
   text-align: center;
   padding-top: 10px;
-  margin-bottom: 10px;*/
+  margin-bottom: 10px;
 }
 
 html{
@@ -45,7 +45,7 @@ html{
 .testbox {
   margin: 20px auto;
   width: 343px; 
-  height: 400px; 
+  height: 350px; 
   -webkit-border-radius: 8px/7px; 
   -moz-border-radius: 8px/7px; 
   border-radius: 8px/7px; 
@@ -56,17 +56,10 @@ html{
   border: solid 1px #cbc9c9;
 }
 
-input[type=radio] {
-  visibility: hidden;
-}
+
 
 form{
   margin: 0 30px;
-}
-
-hr{
-  color: #a9a9a9;
-  opacity: 0.3;
 }
 
 input[type=text],input[type=password]{
@@ -85,13 +78,9 @@ input[type=text],input[type=password]{
   padding-left: 10px;
 }
 
-input[type=password]{
-  margin-bottom: 25px;
-}
-
 #icon {
   display: inline-block;
-  width: 35px;
+  width: 50px;
   background-color: #29C2FF;
   padding: 8px 0px 8px 14px;
   margin-left: 15px;
@@ -108,29 +97,43 @@ input[type=password]{
 
 
 
-a.button {
+#prijava-gumb, #registracija-gumb {
   font-size: 14px;
   font-weight: 600;
   color: white;
-  padding: 6px 25px 0px 20px;
-  margin: 10px 8px 20px 0px;
-  display: inline-block;
-  
   text-decoration: none;
-  width: 62px; height: 27px; 
-  -webkit-border-radius: 5px; 
-  -moz-border-radius: 5px; 
+  width: 120px; height: 30px; 
   border-radius: 5px; 
   background-color: #29C2FF; 
-  -webkit-box-shadow: 0 3px rgb(255,255,255); 
-  -moz-box-shadow: 0 3px rgb(255,255,255)); 
-  box-shadow: 0 3px rgb(255,255,255);
-  transition: all 0.1s linear 0s; 
   top: 0px;
-  left:100px;
+  left:80px;
   position: relative;
 }
 
+#editInfo{
+font-size: 14px;
+  font-weight: 600;
+  color: white;
+  text-decoration: none;
+  width: 120px; height: 30px; 
+  border-radius: 5px; 
+  background-color: #29C2FF; 
+  top: 0px;
+  position: relative;
+}
+ #admin-gumb{
+ font-size: 14px;
+  font-weight: 600;
+  color: white;
+  text-decoration: none;
+  width: 120px; height: 40px; 
+  border-radius: 5px; 
+  background-color: #29C2FF; 
+  top: 0px;
+  position: relative;
+ 
+ 
+ }
 
 
 a.button:hover {
@@ -147,6 +150,7 @@ a.button:hover {
 header{
     background-color: #29C2FF;
     color: white;
+	height:100px
 }
 header h1{
     float: left;
@@ -160,6 +164,20 @@ header ul{
     padding: 1%;
     font-size: 1.2em;
 }
+header ul ul{
+    display: block;
+}
+header ul ul li{
+    display: block;
+    font-size: 0.8em;
+}
+header ul ul li:first-child{
+    border: 0;
+}
+header ul ul li:last-child{
+    border:0;
+}
+
 header li{
     list-style-type: none;
     display:  inline-block;
@@ -171,6 +189,10 @@ header li{
 header li:first-child{
     border-right: 2px dashed white;
 }
+header li:last-child{
+    border-left: 2px dashed white;
+}
+
 header li a{
     display: block;
     color:white;
@@ -228,6 +250,8 @@ footer h1{
     height:100px;
     margin-top: 5px;
     margin-bottom:5px;
+
+	
 }
 #where p{
 
@@ -323,7 +347,7 @@ footer h1{
 #profil table th{
     text-align: left;
 }
-#profil table td{
+#profil table td {
     height:40px;
     vertical-align: middle;
 }
@@ -450,4 +474,37 @@ footer h1{
 }
 #edit_tvrtke a{
     text-decoration: none;
+}
+
+
+#autocomplete{
+
+margin-right:200px;
+
+}
+
+#admin table td{
+width:150px;
+}
+
+#admin table th{
+width:150px;
+position:relative;
+right:50px;
+}
+
+#logo{
+
+}
+#logo a {
+display:block;
+width:100px;
+height:70px;
+padding:10px;
+color:white;
+}
+
+#navigacija{
+margin-top:-70px;
+
 }

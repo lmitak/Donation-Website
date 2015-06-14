@@ -7,31 +7,26 @@
             <div class="column column-12">
                 <div id="map_ui">
                     <form>
-                        <label>Filtriraj sadržaj: </label>
-                        <label for="tip" style="padding-left:1.8%">Tip trgovine:</label>
+                        <label>{{ main.filtriraj_sadrzaj }}: </label>
+                        <label for="tip" style="padding-left:1.8%">{{ main.tip_trgovine }}</label>
                         <select name="tip" id="tip">
-                            <option value="sve">Sve</option>
+                            <option value="sve">{{ main.opcija_sve }}</option>
                             {% for tip in tipovi %}
                                 <option value="{{ tip.idTipa }}">{{ tip.naziv }}</option>
                             {% endfor %}
-                            <!--
-                            <option value="pekara">Pekara</option>
-                            <option value="trgovina">Trgovina</option>
-                            <option value="mesinca">Mesnica</option>
-                            <option value="vocarna">Voćarna</option>-->
                         </select>
                         <input type="checkbox" name="free" id="free"/>
-                        <label for="free">Prikaži samo besplatno</label>
-                        <!--<input type="submit" value="Filtriraj" id="filter" onclick="filtriraj()"/>-->
-                        <button type="button" onclick="filtriraj()">Filtriraj</button>
+                        <label for="free">{{ main.besplatno }}</label>
+                        <button type="button" onclick="filtriraj()">{{ main.filtriraj }}</button>
                     </form>
                     <div id="map"></div>
                 </div>
 
                 <div id="where">
-                    <p>Nismo uspjeli naći vašu lokaciju? Upišite je sami:</p>
-                    <input id="autocomplete" placeholder="Upiši adresu" type="text" />
+                    <p>{{ main.main_poruka }}</p>
+                    <input id="autocomplete" placeholder="{{ main.upisi_adresu }}" type="text" />
                 </div>
+				
             </div>
         </div>
     </div>

@@ -4,11 +4,12 @@
     <div class="row">
         <div class="column column-6" id="info">
 
-            <h2>O tvrtci</h2>
-            <p id="naziv">Naziv tvrtke: {{ naziv }}</p>
-            <p>Tip tvrtke: {{tip}}</p>
-            <p id="adresa">Adresa tvrtke: {{adresa}}</p>
-            <p>Registrana: </p>
+            <h2>{{ info.o_tvrtci }}</h2>
+            <p id="naziv">{{ info.naziv }}: {{ naziv }}</p>
+            <p>{{ info.tip }}: {{tip}}</p>
+            <p id="adresa">{{ info.adresa }}: {{adresa}}</p>
+            <p id="web">{{ info.web }}: {{web}}</p>
+            <p>{{ info.reg }}: {{ reg }}</p>
             <p>Rating:</p>
             {% if antispamming.rated == false %}
             <ul id="rating" value="{{ rating }}">
@@ -23,17 +24,17 @@
             </ul>
 
             <br>
-            <h2>Podaci o proizvodima</h2>
-            <p>Kolicina popusta: {{kolicina}}%</p>
-            <p>Vrijeme akcije: {{vrijeme}}</p>
+            <h2>{{ info.podaci }}</h2>
+            <p>{{ info.kolicina }}: {{kolicina}}%</p>
+            <p>{{ info.vrijeme }}: {{vrijeme}}</p>
 
         </div>
 
         <div class="column column-6">
-            <h2><strong>Komentari</strong></h2>
+            <h2><strong>{{ info.komentari }}</strong></h2>
             <div id="komentari">
                 <ul>
-                {% for  komentar in komentari %}
+                {% for komentar in komentari %}
                     <li>{{ komentar.komentar }}</li>
                 {% endfor %}
 

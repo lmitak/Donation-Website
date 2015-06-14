@@ -7,22 +7,22 @@
 
 
     <div class="testbox">
-        <h1>Prijava</h1>
+        <h1>{{ prijava.prijava }}</h1>
 
         <form method="post">
 
             <label id="icon" for="name"><i class="icon-user "></i></label>
-            <input type="text" name="name" id="name" placeholder="Korisničko ime" required/>
+            <input type="text" name="name" id="name" placeholder="{{ prijava.korisnicko_ime }}" required/>
             <label id="icon" for="name"><i class="icon-key "></i></label>
-            <input type="password" name="password" id="password" placeholder="Lozinka" required/>
+            <input type="password" name="password" id="password" placeholder="{{ prijava.lozinka }}" required/>
 
             </br>
 
 
             </br>
 
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Spoji se</button>
-            <a href="#" class="button" type="submit">Prijavi se</a>
+            <button id="prijava-gumb" type="submit">{{ prijava.prijavi_se }}</button>
+           
         </form>
     </div>
 

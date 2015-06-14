@@ -3,10 +3,12 @@
     <div class="row">
         <div class="column column-12" id="edit_tvrtke">
             <form action="uredi firmu" method="post">
-                <input type="hidden" id="id" name="id" value="{{ tvrtka.idTvrtke }}">
-                <label for="naziv"><p>Naziv tvrtke:</p></label>
+                <input type="hidden" id="id" name="id" value="{{ tvrtka.id }}">
+				
+				</br>
+                <label for="naziv"><p>{{ uredi.naziv }}:</p></label>
                 <input type="text" id="naziv" name="naziv" value="{{ tvrtka.naziv }}">
-                <label for="tip"><p>Tip tvrtke:</p></label>
+                <label for="tip"><p>{{ uredi.tip }}:</p></label>
                 <select id="tip" name="tip">
                     {% for tip in tipovi %}
                         {% if tip.idTipa == tvrtka.tip %}
@@ -16,21 +18,26 @@
                         {% endif %}
                     {% endfor %}
                 </select>
-                <label for="autocomplete_places"><p>Adresa:</p></label>
+                <label for="autocomplete_places"><p>{{ uredi.adresa }}:</p></label>
                 <input id="autocomplete_places" name="autocomplete_places" type="text" value="{{ tvrtka.adresa }}"/><!--onFocus="geolocate()"-->
                 <input type="hidden" id="longitude" name="longitude" value="{{ tvrtka.longitude }}">
                 <input type="hidden" id="latitude" name="latitude" value="{{ tvrtka.latitude }}">
-                <label for="web"><p>Web stranica:</p></label>
+                <label for="web"><p>{{ uredi.web }}:</p></label>
+				</br>
                 {% if tvrtka.web == null %}
                     <input type="url" name="web" id="web">
                 {% else %}
+				
                     <input type="url" name="web" id="web" value="{{ tvrtka.web }}">
+					
                 {% endif %}
+				</br>
                 <br>
-                <input type="button" id="izbrisiTvrtku" name="izbrisiTvrtku" onclick="izbrisiTvrtku({{ tvrtka.idTvrtke }})" value="Izbiriši Tvrtku"/>
-                <a href="profil"><input type="button" value="Odustani"></a>
-                <input type="submit" value="Prihvati">
+                <input type="button" id="izbrisiTvrtku" name="izbrisiTvrtku" onclick="izbrisiTvrtku({{ tvrtka.id }})" value="{{ uredi.izbrisi }}"/>
+                <a href="profil"><input type="button" value="{{ uredi.odustani }}"></a>
+                <input type="submit" value="{{ uredi.prihvati }}">
             </form>
+			</br></br>
         </div>
     </div>
 {% endblock %}

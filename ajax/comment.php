@@ -14,10 +14,10 @@ $dbName = "donationdb";
 if(is_string($_POST['comment'])){
     try{
 
-        $dbh = new PDO("mysql:host=$hostname;dbname=$dbName", $user, $pw);
+        $dbh = new PDO("mysql:host=$hostname;dbname=$dbName;charset=utf8", $user, $pw);
         $izvrsi = 0;
 
-        $upitTvrtke = "SELECT idTvrtke FROM tvrtka WHERE naziv = '{$_POST['nazivTvrtke']}' AND adresa = '{$_POST['adresaTvrtke']}'";
+        $upitTvrtke = "SELECT id FROM tvrtka WHERE naziv = '{$_POST['nazivTvrtke']}' AND adresa = '{$_POST['adresaTvrtke']}'";
         $idTvrtke = $dbh->query($upitTvrtke);
         $idTvrtke = $idTvrtke->fetch(PDO::FETCH_ASSOC);
         if($idTvrtke == null || empty($idTvrtke)) {
@@ -26,7 +26,7 @@ if(is_string($_POST['comment'])){
 
         if(isset($_SESSION['anonymous'])){
 
-            $odobrenjeUpit = "SELECT * FROM antispamming WHERE cookie = '{$_SESSION['anonymous']}' AND  idTvrtke = {$idTvrtke['idTvrtke']}";
+            $odobrenjeUpit = "SELECT * FROM antispamming WHERE cookie = '{$_SESSION['anonymous']}' AND  idTvrtke = {$idTvrtke['id']}";
             $res = $dbh->query($odobrenjeUpit);
             $row = $res->fetch(PDO::FETCH_ASSOC);
             if(empty($row) || $row == false){
@@ -47,7 +47,7 @@ if(is_string($_POST['comment'])){
             if($izvrsi == 1){ //kada nije uopce upisan u anti spammignb
                 $hash_cookie = password_hash(time(), PASSWORD_DEFAULT);
 
-                $antiSUpit = "INSERT INTO antispamming(cookie, commented, idTvrtke) VALUES('{$hash_cookie}', 1, {$idTvrtke['idTvrtke']})";
+                $antiSUpit = "INSERT INTO antispamming(cookie, commented, idTvrtke) VALUES('{$hash_cookie}', 1, {$idTvrtke['id']})";
                 $resASU = $dbh->query($antiSUpit);
                 //cookie traje 1 dan
                 ini_set('session.gc_maxlifetime', 3600 * 24);
@@ -56,14 +56,14 @@ if(is_string($_POST['comment'])){
 
 
             }elseif($izvrsi == 2){ //kada je ali moze izvrsiti
-                $antiSUpit = "UPDATE antispamming SET commented = 1 WHERE cookie = '{$_SESSION['anonymous']}' AND  idTvrtke = {$idTvrtke['idTvrtke']}";
+                $antiSUpit = "UPDATE antispamming SET commented = 1 WHERE cookie = '{$_SESSION['anonymous']}' AND  idTvrtke = {$idTvrtke['id']}";
                 $resASU = $dbh->query($antiSUpit);
             }
-            $commentUpit = "INSERT INTO komentari(idTvrtke, komentar) VALUES({$idTvrtke['idTvrtke']}, '{$_POST['comment']}')";
+            $commentUpit = "INSERT INTO komentari(idTvrtke, komentar) VALUES({$idTvrtke['id']}, '{$_POST['comment']}')";
             if($resRate = $dbh->query($commentUpit)) {
                 echo "success";
             }else{
-                echo "fail";
+                echo "fail \n" + var_dump($resRate);
             }
 
 

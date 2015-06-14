@@ -7,11 +7,16 @@ var youMarker;
 var zvijezde;
 /*varijable sklopke*/
 var radiosDa, radiosNe, sklopke;
+/*jezični sadržaj*/
+var autocomplete_text;
+var you_marker_text;
+var content_text = [];
 
 
 document.addEventListener("DOMContentLoaded", function(event) {
 
     if(document.getElementById('map')){
+        jezik_contenta();
         google.maps.event.addDomListener(window, 'load', initialize);
     }
 
@@ -34,6 +39,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 function initialize() {
+
     var mapOptions = {
         zoom: 16,
         mapTypeId:google.maps.MapTypeId.ROADMAP
@@ -68,7 +74,7 @@ function initialize() {
             obavi_ajax_promise(place.geometry.location.A, place.geometry.location.F);
             filtriraj();
         } else {
-            document.getElementById('autocomplete').placeholder = 'Upiši adresu';
+            document.getElementById('autocomplete').placeholder = autocomplete_text;
         }
 
     }
@@ -86,10 +92,10 @@ function initialize() {
         youMarker = new google.maps.Marker({
             position: position,
             animation: google.maps.Animation.BOUNCE
-        })
+        });
 
         var youInfowindow = new google.maps.InfoWindow({
-            content: 'Ti si tu'
+            content: you_marker_text
         });
 
         youMarker.setMap(map);
@@ -102,9 +108,13 @@ function initialize() {
     function obavi_ajax_promise(positionLatitude, positionLongitude){
         promise_ajax_upit(positionLatitude, positionLongitude).then(function(response){
             console.log("Success!", response);
-            markersArray = [new Array(response.length), new Array(3)];
-            var markArray = [];
+            /*markersArray = [new Array(response.length), new Array(3)];*/
+            markersArray = [];
+
+
             for(var i = 0; i < response.length; i++){
+                markersArray[i] = [];
+                //alert(response[i]['2']);
 
                 markersArray[i][0] = new google.maps.Marker({
                     position: new google.maps.LatLng(response[i]['latitude'], response[i]['longitude']),
@@ -112,18 +122,26 @@ function initialize() {
                     map: map
                 });
 
-                markersArray[i][1] = response[i]['idTipa'];
-                markersArray[i][2] = markArray[2] = response[i]['kolPopusta'] == 100;
 
+                markersArray[i][1] = response[i]['idTipa'];
+                markersArray[i][2] = response[i]['kolPopusta'] == 100;
+
+                console.log(markersArray);
                 var content = "<h2>" + response[i][2] +  "</h2>";
                 content += "<div style='width:200px;'>";
-                content += "<p>Adresa: " + response[i][4] +"</p>";
-                content += "<p>Popust: " + response[i]['kolPopusta'] +"</p>";
-                content += "<p>Trajanje akcije: " + response[i]['vrijemePopusta'] +"</p>";
-                content += "<a href='info=" + response[i]['idTvrtke'] + "'>Informacije o tvrtki</a>"
+                content += "<p>" + content_text['adresa'] + ": " + response[i][4] + "</p>";
+                content += "<p>" +content_text['popust'] + ": " + response[i]['kolPopusta'] + "</p>";
+                content += "<p>" + content_text['dt'] + ": " + response[i]['vrijemePopusta'] + "</p>";
+                if(response[i]['dostupno'] == 0){
+                    content += "<p>" + content_text['dosuptnost'] + ": " + content_text['ne'] + "<p>";
+                }else{
+                    content += "<p>" + content_text['dosuptnost'] + ": " + content_text['da'] +"<p>";
+                }
+                content += "<a href='info=" + response[i]['id'] + "'>" + content_text['about'] + "</a>";
                 content += "</div>";
 
                 attachSecretMessage(markersArray[i][0], content);
+
             }
         }, function(error){
             console.error("Failed!", error);
@@ -133,44 +151,14 @@ function initialize() {
 
     var geoOptions = {
         timeout: 10 * 100
-    }
+    };
     if(navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
             var pos = new google.maps.LatLng(position.coords.latitude,
                 position.coords.longitude);
-
             centerYourself(pos);
+
             obavi_ajax_promise(position.coords.latitude, position.coords.longitude);
-/*
-            promise_ajax_upit(position.coords.latitude, position.coords.longitude).then(function(response){
-                console.log("Success!", response);
-                markersArray = [new Array(response.length), new Array(3)];
-                var markArray = [];
-                for(var i = 0; i < response.length; i++){
-
-                    markersArray[i][0] = new google.maps.Marker({
-                        position: new google.maps.LatLng(response[i]['latitude'], response[i]['longitude']),
-                        icon: 'images/small/' + response[i]['ikona'],
-                        map: map
-                    });
-
-                    markersArray[i][1] = response[i]['idTipa'];
-                    markersArray[i][2] = markArray[2] = response[i]['kolPopusta'] == 100;
-
-                    var content = "<h2>" + response[i][2] +  "</h2>";
-                    content += "<div style='width:200px;'>";
-                    content += "<p>Adresa: " + response[i][4] +"</p>";
-                    content += "<p>Popust: " + response[i]['kolPopusta'] +"</p>";
-                    content += "<p>Trajanje akcije: " + response[i]['vrijemePopusta'] +"</p>";
-                    content += "<a href='Info'>Informacije o tvrtki</a>"
-                    content += "</div>";
-
-                    attachSecretMessage(markersArray[i][0], content);
-                }
-            }, function(error){
-                console.error("Failed!", error);
-            });*/
-
         }, function() {
             handleNoGeolocation(true);
         }, geoOptions);
@@ -179,6 +167,7 @@ function initialize() {
         handleNoGeolocation(false);
     }
 }
+
 
 function handleNoGeolocation(errorFlag) {
     if (errorFlag) {
@@ -315,7 +304,7 @@ function inicijalizirajRating(){
         };
 
         zvijezda.onmouseout = function(){
-            pocetniRating();
+            pocetniRating("#29C2FF");
         };
 
         zvijezda.onclick = function(){
@@ -324,11 +313,11 @@ function inicijalizirajRating(){
     }
 
     function pocetniRating(boja){
-        for(i = 1; i <= zvijezde.length; i++){
+        for(var i = 1; i < zvijezde.length; i++){
             if(i <= rating){
                 zvijezde[i].style.color = boja;
             }else{
-                zvijezde[i].style.color = "rgba(90, 90, 90, 1)";
+                zvijezde[i].style.color = "rgb(90, 90, 90)";
             }
         }
     }
@@ -507,26 +496,26 @@ function intializeSpremiPromjene(){
 
     function srediKlik(gumb, i){
         gumb.onclick = function(){
-            spremiPromjene(i);
+            spremiPromjene(i, gumb.getAttribute('id'));
         };
     }
 }
 
 
 //za brzo spremanje korisnikovih izmjena(oko popusta)
-function spremiPromjene(id){
+function spremiPromjene(i, id){
     var kolPopusta = document.getElementsByClassName('kolPopusta');
     var vrijemePopusta = document.getElementsByClassName('vrijemePopusta');
     var dostupnost;
+    var kolPoustaVrijednost = kolPopusta[i].value;
 
-    var kolPoustaVrijednost = kolPopusta[id].value;
-
-    var vrijemePopustaVrijednost = vrijemePopusta[id].value;
-    if(radiosDa[id].checked){
+    var vrijemePopustaVrijednost = vrijemePopusta[i].value;
+    if(radiosDa[i].checked){
         dostupnost = 1;
     }else{
         dostupnost = 0;
     }
+
     var hr = new XMLHttpRequest();
     // Create some variables we need to send to our PHP file
     var url = "ajax/promjene_tvrtke.php";
@@ -566,5 +555,27 @@ function izbrisiTvrtku(id){
 
 }
 
-
+function jezik_contenta(){
+    if(document.getElementById("Hrv")){
+        autocomplete_text = 'Upiši adresu';
+        you_marker_text = 'Ti si tu';
+        content_text['adresa'] = "Adresa";
+        content_text['popust'] = 'Popust';
+        content_text['dt'] = 'Vrijeme popusta';
+        content_text['dosuptnost'] = 'Dosuptno';
+        content_text['da'] = "da";
+        content_text['ne'] = "ne";
+        content_text['about'] = "Informacije o tvrtki";
+    }else if(document.getElementById("Cro")){
+        autocomplete_text = 'Type in the address';
+        you_marker_text = 'You are here';
+        content_text['adresa'] = "Address";
+        content_text['popust'] = 'Discount';
+        content_text['dt'] = 'Discount time';
+        content_text['dosuptnost'] = 'Availability';
+        content_text['da'] = "yes";
+        content_text['ne'] = "no";
+        content_text['about'] = "About company";
+    }
+}
 

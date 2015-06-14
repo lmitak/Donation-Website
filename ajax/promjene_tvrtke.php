@@ -18,16 +18,16 @@ if(isset($_SESSION['_sf2_attributes']['user'])){
     try{
 
         $dbh = new PDO("mysql:host=$hostname;dbname=$dbName", $user, $pw);
-
-        $provjeraKorisnika = "SELECT * FROM korisnik WHERE username = '{$_SESSION['_sf2_attributes']['user']}'";
-        if($dbh->query($provjeraKorisnika)){
+        $provjeraKorisnika = "SELECT * FROM korisnik WHERE username = '{$_SESSION['_sf2_attributes']['user']['username']}'";
+        $res = $dbh->query($provjeraKorisnika);
+        if($row = $res->fetch(PDO::FETCH_ASSOC)){
             $upit = "UPDATE tvrtka
                     SET kolPopusta = {$_POST['kolPopusta']},
                     vrijemePopusta = '{$_POST['vrijemePopusta']}',
                     dostupno = {$_POST['dostupnost']}
-                    WHERE idTvrtke = {$_POST['idTvrtke']} + 1";
+                    WHERE id = {$_POST['idTvrtke']}";
             if($dbh->query($upit)){
-                echo "success ";
+                echo "success";
             }else{
                 echo "fail";
             }

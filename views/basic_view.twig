@@ -14,28 +14,63 @@
 <body>
 <header>
     <div class="row">
-        <h1>Logo</h1>
+	<div id="logo">
+        <a href="main">
+  <h1>
+    Logo
+  </h1>
+</a>
+</div>
+<div id="navigacija">
 		{%  if  app.session.get('user') %}
+		{% set user = app.session.get('user') %}
+		
+		{% if user['isAdmin'] %}
 		
 		<ul>
-            <!--<li><a href="/din/Donation-Website-master/info">Moj profil</a>
-			<li><a href="logout">Odjavi se</a></li>-->
-            <li><a href="info">Moj profil</a></li>
-            <li><a href="logout">Odjavi se</a></li>
+			
+			<li><a href="postavke">{{ header.postavke_link }}</a>
+			<li><a href="logout">{{ header.odjava_link }}</a></li>
+            <li>
+                <ul>
+                    <li><a href="lang =hrv" id="{{ header.hrv }}">{{ header.hrv }}</a></li>
+                    <li><a href="lang =eng">{{ header.eng }}</a></li>
+                </ul>
+            </li>
+			
 		</ul>
-      
+		
+		{% else %}
+		<ul>
+			
+			<li><a href="profil">{{ header.profil_link }}</a>
+			<li><a href="logout">{{ header.odjava_link }}</a></li>
+            <li>
+                <ul>
+                    <li><a href="lang =hrv" id="{{ header.hrv }}">{{ header.hrv }}</a></li>
+                    <li><a href="lang =eng">{{ header.eng }}</a></li>
+                </ul>
+            </li>
+			
+		</ul>
+      {% endif %}
 {% else %}
     <ul>
-            <!--<li><a href="/din/Donation-Website-master/prijava">Prijavi se</a></li>-->
-            <li><a href="prijava">Prijavi se</a></li>
+            <li><a href="prijava">{{ header.prijava_link }}</a></li>
             <li>
-                Nisi još korisnik, a želiš prijaviti svoju tvrtku?<br>
-                <!--<a href="/din/Donation-Website-master/registracija">Registriraj se</a>-->
-                <a href="registracija">Registriraj se</a>
+                {{ header.registriraj_se_text }}<br>
+                <a href="registracija">{{ header.registracija_link }}</a>
             </li>
+            <li>
+                <ul>
+                    <li><a href="lang =hrv" id="{{ header.hrv }}">{{ header.hrv }}</a></li>
+                    <li><a href="lang =eng">{{ header.eng }}</a></li>
+                </ul>
+            </li>
+			
         </ul>
 {% endif %}
-
+</div>
       
     </div>
 </header>
@@ -50,15 +85,16 @@
 
 <footer>
     <div class="row">
-        <h1>O nama</h1>
+		</br>
+        <h1>{{ footer.o_nama_naslov }}</h1>
         <p>
-            Mi smo neprofitabilna organizacija (web stranica) koja služi za informiranje o popustima i donacijama tvrtki.
-            Nismo treća stranka u razmjeni dobara, te tako se odrićemo svake odgovornosti.
+            {{ footer.disclaimer }}
         </p>
         <p>
-            Kontaktirati nas možete preko tel.broja: 123 45 67, ili e-mail: doniram_truplo@sprovod.hr
+            {{ footer.kontakt }}
         </p>
-        <p>Copyright©DWAbla</p>
+        <p>{{ footer.copyright }}</p>
+		</br>
     </div>
 </footer>
 </body>
