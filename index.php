@@ -520,6 +520,16 @@ try{
         }
     });
 
+    $app->get('/brisiTvrtku={id}', function($id) use ($app){
+
+
+
+        include_once('logic/idiormUse.php');
+        $tvrtka = ORM::for_table('tvrtka')->find_one($id);
+        $tvrtka->delete();
+        return $app->redirect('profil');
+    });
+
     $app->run();
 
 }catch (Exception $e){

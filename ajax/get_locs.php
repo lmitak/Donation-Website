@@ -4,6 +4,7 @@
  * User: lmita_000
  * Date: 29.5.2015.
  * Time: 20:12
+ * AJAX PHP dio za dobivanje obližnjih lokacija oko korisnika
  */
 
 
@@ -12,13 +13,10 @@ $user = "root";
 $pw = "";
 $dbName = "donationdb";
 
-//iconv_set_encoding("input_encoding", "UTF-8");
-//iconv_set_encoding("output_encoding", "UTF-8");
-//iconv_set_encoding("internal_encoding", "UTF-8");
 
 try{
     $dbh = new PDO("mysql:host=$hostname;dbname=$dbName;charset=utf8", $user, $pw);
-//dodati još provjeru da li je dostupno sadržaja
+    //upit za provjeru da li se nalaze tvrtke u zadanom radijusu oko korisnika
     $sql = "SELECT * FROM tvrtka
         JOIN tipTvrtke ON idTipa = tip
         WHERE
@@ -27,11 +25,6 @@ try{
           AND (kolPopusta IS NOT NULL) AND (vrijemePopusta IS NOT NULL)";
     $array = array();
     foreach($dbh->query($sql) as $row){
-        //$row['14'];
-        //$picolo = iconv("UTF8", "UTF8", $row['14']);
-        //echo $row['14'];
-        //var_dump($picolo);
-        //var_dump(iconv_get_encoding('all'));
 
         array_push($array, $row);
     }

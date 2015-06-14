@@ -4,6 +4,7 @@
  * User: lmita_000
  * Date: 4.6.2015.
  * Time: 19:03
+ * Ajax php dio za komentiranje usluga tvrtke
  */
 session_start();
 $hostname = "localhost";
@@ -24,6 +25,12 @@ if(is_string($_POST['comment'])){
             echo "error";
         }
 
+        /** provjeravamo da li je anonimni korisnik već jednom komentirao firmu
+         * lagana verzija anti-spamm sustava - ako korisnik će htjeti probiti sustav, probit će ga koliko god ga mi htjeli zaštiti jer nema
+        savršene zaštite dok održavamo anonimnost korisnika.
+        Kako radi: provjerava se da li je korisnik već nešto ocjenjivo ili komentiro (tako zadobije kolačić);
+        Ako je provjerava se da li je to radio već za zadanu tvrtku; Ako je provejrava se da li je komentiro  tvrtku.
+        Na temelju tih uvjeta daje određuje mu se jedna od mogućnosti.**/
         if(isset($_SESSION['anonymous'])){
 
             $odobrenjeUpit = "SELECT * FROM antispamming WHERE cookie = '{$_SESSION['anonymous']}' AND  idTvrtke = {$idTvrtke['id']}";

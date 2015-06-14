@@ -33,7 +33,8 @@
                 {% endif %}
 				</br>
                 <br>
-                <input type="button" id="izbrisiTvrtku" name="izbrisiTvrtku" onclick="izbrisiTvrtku({{ tvrtka.id }})" value="{{ uredi.izbrisi }}"/>
+                <!--<input type="button" id="izbrisiTvrtku" name="izbrisiTvrtku" onclick="izbrisiTvrtku" value="{{ uredi.izbrisi }}"/>-->
+                <a href="brisiTvrtku={{ tvrtka.id }}"><input type="button" value="{{ uredi.izbrisi }}"></a>
                 <a href="profil"><input type="button" value="{{ uredi.odustani }}"></a>
                 <input type="submit" value="{{ uredi.prihvati }}">
             </form>

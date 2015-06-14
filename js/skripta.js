@@ -13,6 +13,8 @@ var you_marker_text;
 var content_text = [];
 
 
+/*** funkcija koja se poziva kada se sve na stranici učita;
+ * provjerava da li se ključni elementi nalaze u aplikaciji te poziva druge funkcijie ***/
 document.addEventListener("DOMContentLoaded", function(event) {
 
     if(document.getElementById('map')){
@@ -36,14 +38,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
 });
-
-
+/*** ---Funkcije za kartu--- ***/
+/*** Inicijalizacije google.map karte i "place" inputa za računo postavljanje lokacije***/
 function initialize() {
 
     var mapOptions = {
         zoom: 16,
         mapTypeId:google.maps.MapTypeId.ROADMAP
-        //center: new google.maps.LatLng(-34.397, 150.644)
     };
     map = new google.maps.Map(document.getElementById('map'),
         mapOptions);
@@ -79,6 +80,7 @@ function initialize() {
 
     }
 
+    //izbriše sve markere na karti
     function clearMarkers() {
         for (var i = 0; i < markersArray.length; i++) {
             if (markersArray[i]) {
@@ -88,6 +90,7 @@ function initialize() {
         markersArray = [];
     }
 
+    //pozicionira pogled karte i marker koji predstavlja korisniku na sredinu
     function centerYourself(position){
         youMarker = new google.maps.Marker({
             position: position,
@@ -104,7 +107,7 @@ function initialize() {
         map.setCenter(position);
     }
 
-
+    //poziva promise ajax upit te obrađuje dobivene podatke
     function obavi_ajax_promise(positionLatitude, positionLongitude){
         promise_ajax_upit(positionLatitude, positionLongitude).then(function(response){
             console.log("Success!", response);
@@ -168,7 +171,7 @@ function initialize() {
     }
 }
 
-
+/*** funkcija javlja grešku u slučaju greške na karti ***/
 function handleNoGeolocation(errorFlag) {
     if (errorFlag) {
         var content = 'Error: The Geolocation service failed.';
@@ -186,6 +189,7 @@ function handleNoGeolocation(errorFlag) {
     map.setCenter(options.position);
 }
 
+/***postavlja onclick listener na stavke koje se prikazuju na karti***/
 function attachSecretMessage(marker, content) {
     var infowindow = new google.maps.InfoWindow({
         content: content
@@ -196,7 +200,7 @@ function attachSecretMessage(marker, content) {
     });
 }
 
-
+/***promise ajax upit koji asinkrono dobavlja stavke koje se trebaju prikazati na karti (u određenom radijusu)***/
 function promise_ajax_upit(latitude, longitude){
     
 
@@ -232,8 +236,9 @@ function promise_ajax_upit(latitude, longitude){
     });
 }
 
+/*** funkcija za filtriranje stavki koje se prikazuju na karti.
+ * Na karti se filtriraju stavke po kategoriji i po atributu da li je stavka potpuno besplatna ***/
 function filtriraj(){
-    console.log(markersArray);
     var tip_trgovine = document.getElementById("tip");
     var besplatno = document.getElementById("free");
     var tipovi = document.getElementsByTagName("option");
@@ -243,7 +248,6 @@ function filtriraj(){
                 markersArray[i][0].setMap(map);
                 markersArray[i][0].setAnimation(google.maps.Animation.DROP);
 
-                console.log("nije " + markersArray[i][1] + " nego je " + tip_trgovine.value);
             }else{
                 markersArray[i][0].setMap(null);
             }
@@ -251,14 +255,11 @@ function filtriraj(){
         }
 
     }else{
-        console.log("besplatno nije klinkuto, a value je:" + tip_trgovine.value);
-
         for(var i = 0; i < markersArray.length; i++){
             if(tip_trgovine.value == markersArray[i][1] || tip_trgovine.value === "sve"){
                 markersArray[i][0].setMap(map);
                 markersArray[i][0].setAnimation(google.maps.Animation.DROP);
 
-                console.log("nije " + markersArray[i][1] + " nego je " + tip_trgovine.value);
             }else{
                 markersArray[i][0].setMap(null);
             }
@@ -266,16 +267,16 @@ function filtriraj(){
     }
 }
 
-//funkcije ratinha\\
+/*** ---Funkcije ocjenjivanja--- ***/
 
-
+/*** inicijalizira zvijjezde za ocjenjivanje;
+ * poziva funkcije za hover efekt, postavlja pocetni rating, poziva ajax upit za spremanje ocjene ***/
 function inicijalizirajRating(){
     zvijezde = [];
     var boja;
     for(var i = 1; i < 6; i++){
         zvijezde[i] = document.getElementById(i);
     }
-    console.log(zvijezde);
 
     if(document.getElementById('rating') != null){
         boja = "#29C2FF";
@@ -289,10 +290,9 @@ function inicijalizirajRating(){
     }
 
     var rating = ratingLista.getAttribute('value');
-    console.log(rating);
     pocetniRating(boja);
 
-
+    //funkcija postavlja efekt za hover zvijezdi i funkciju za onclick metodu
     function osvijetljenje(zvijezda, i){
 
         zvijezda.onmouseover = function(){
@@ -312,6 +312,7 @@ function inicijalizirajRating(){
         };
     }
 
+    //postavlja zvijezde na zadanu boju ili na početnu boju
     function pocetniRating(boja){
         for(var i = 1; i < zvijezde.length; i++){
             if(i <= rating){
@@ -322,6 +323,7 @@ function inicijalizirajRating(){
         }
     }
 
+    //ajax funkcija za spremanje ocjene
     function rating_ajax(star_nmbr){
         var nazivTvrtke = document.getElementById('naziv');
         var adresaTvrtke = document.getElementById('adresa');
@@ -349,11 +351,10 @@ function inicijalizirajRating(){
                 }
             }
         };
-        // Send the data to PHP now... and wait for response to update the status div
         hr.send(vars);
         // Actually execute the request
     }
-
+    //funkcija za "zaključavanje" (micanje efekata) zvijezda nakon što je ajax upit izvršen
     function lock_stars(star_nmbr){
         for(var i = 1; i <= zvijezde.length; i++){
             if(star_nmbr >= i){
@@ -364,7 +365,7 @@ function inicijalizirajRating(){
             disable_mouse(zvijezde[i]);
         }
     }
-
+    ///funkcija za onemogućavanje metoda koje su se izvršale pomoću miša
     function disable_mouse(zvijezda){
         zvijezda.onmouseover = false;
         zvijezda.onclick = false;
@@ -373,7 +374,7 @@ function inicijalizirajRating(){
 }
 
 
-
+/*** ---Komentari--- ***/
 //dodavanje komentara u bazu i prikazivanje na stranici
 function addComent(){
     var komentar = document.getElementById("comment");
@@ -406,6 +407,8 @@ function addComent(){
     hr.send(vars);
 }
 
+
+/*** funkcia za kontrolu "sklopke" kojom korisnik prikazuje da li je dostpuno artikala ili ne ***/
 function postavkeSklopke(){
     radiosDa = document.getElementsByClassName("radioDa");
     radiosNe = document.getElementsByClassName("radioNe");
@@ -421,7 +424,7 @@ function postavkeSklopke(){
         promjeniStanjeSklopke(radiosDa[i], radiosNe[i], sklopke[i], i)
     }
 
-
+    //mijenja stanje "sklopke"
     function promjeniStanjeSklopke(radioDa, radioNe, sklopka, i){
 
         radioDa.onclick = function(){
@@ -441,7 +444,7 @@ function postavkeSklopke(){
     }
 
 }
-//funkcije za autocomplete adrese bez mape
+/***funkcije za autocomplete adrese bez mape***/
 function autocomplete_places(){
     autocomplete = new google.maps.places.Autocomplete(
         /** @type {HTMLInputElement} */(document.getElementById('autocomplete_places')),
@@ -459,7 +462,7 @@ function autocomplete_places(){
 
     });
 }
-
+//funkcija za dobivanje atribute "latitude" i "longitude"
 function giveLatLng(){
     var longitude = document.getElementById('longitude');
     var latitude = document.getElementById('latitude');
@@ -471,7 +474,8 @@ function giveLatLng(){
     }
 
 }
-
+/***funkcija koja sama locira korisnika kako bi mu se olakšalo korištenje tražilice mjesta
+ * korištenje je opcionalno; unutar <dodajFirmuForma.twig> se treba dodati po želji***/
 function geolocate() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
@@ -486,9 +490,9 @@ function geolocate() {
     }
 }
 
+/*** funkcija inicijalizira akciju gumba koji služi za brzo spremanje promjena vezanih uz popuste ***/
 function intializeSpremiPromjene(){
     var gumbi = document.getElementsByClassName('spremiPromjene');
-
 
     for(var i = 0; i < gumbi.length; i++){
         srediKlik(gumbi[i], i);
@@ -502,7 +506,7 @@ function intializeSpremiPromjene(){
 }
 
 
-//za brzo spremanje korisnikovih izmjena(oko popusta)
+/*** funkcija sprema promjene(ajax) koje korisnik učini nad atributima tvrtke, vezanima uz popuste ***/
 function spremiPromjene(i, id){
     var kolPopusta = document.getElementsByClassName('kolPopusta');
     var vrijemePopusta = document.getElementsByClassName('vrijemePopusta');
@@ -539,22 +543,8 @@ function spremiPromjene(i, id){
     hr.send(vars);
 }
 
-function izbrisiTvrtku(id){
-    var hr = new XMLHttpRequest();
-    // Create some variables we need to send to our PHP file
-    var url = "ajax/brisanje_tvrtke.php";
-    var vars = "idTvrtke=" + id;
 
-    hr.open("POST", url, true);
-    // Set content type header information for sending url encoded variables in the request
-    hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    hr.onreadystatechange = function() {
-
-    };
-    hr.send(vars);
-
-}
-
+/***Funkcija sadrži i postavlja sadržaj elemenata kako bi se omogućila višejezičnost***/
 function jezik_contenta(){
     if(document.getElementById("Hrv")){
         autocomplete_text = 'Upiši adresu';

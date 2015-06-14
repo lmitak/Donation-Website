@@ -4,6 +4,7 @@
  * User: lmita_000
  * Date: 4.6.2015.
  * Time: 19:03
+ * Ajax php dio za ocjenjivanje usluga tvrtke
  */
 session_start();
 $hostname = "localhost";
@@ -16,7 +17,7 @@ if(is_numeric($_POST['stars'])){
 
         $dbh = new PDO("mysql:host=$hostname;dbname=$dbName;charset=utf8", $user, $pw);
         $izvrsi = 0;
-
+        //nalazimo id tvrtke pomoću atributa 'naziv' i 'adresa' koje smatramo da ne mogu biti isti za dvije firme
         $upitTvrtke = "SELECT id FROM tvrtka WHERE naziv = '{$_POST['nazivTvrtke']}' AND adresa = '{$_POST['adresaTvrtke']}'";
         $idTvrtke = $dbh->query($upitTvrtke);
         $idTvrtke = $idTvrtke->fetch(PDO::FETCH_ASSOC);
@@ -24,6 +25,12 @@ if(is_numeric($_POST['stars'])){
             echo "error";
         }
 
+        /** provjeravamo da li je anonimni korisnik već jednom ocjenjivao firmu
+         * lagana verzija anti-spamm sustava - ako korisnik će htjeti probiti sustav, probit će ga koliko god ga mi htjeli zaštiti jer nema
+         savršene zaštite dok održavamo anonimnost korisnika.
+         Kako radi: provjerava se da li je korisnik već nešto ocjenjivo ili komentiro (tako zadobije kolačić);
+         Ako je provjerava se da li je to radio već za zadanu tvrtku; Ako je provejrava se da li je ocjenjivo  tvrtku.
+         Na temelju tih uvjeta daje određuje mu se jedna od mogućnosti.**/
         if(isset($_SESSION['anonymous'])){
 
             $odobrenjeUpit = "SELECT * FROM antispamming WHERE cookie = '{$_SESSION['anonymous']}' AND  idTvrtke = {$idTvrtke['id']}";
